@@ -67,12 +67,14 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "photoCell") as! PhotoCell
+        
         let post = posts[indexPath.row]
         
         if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
             // photos is NOT nil, go ahead and access element 0 and run the code in the curly braces
             let imageUrlString = photos[0].value(forKeyPath: "original_size.url") as? String
             let imageUrl = URL(string: imageUrlString!)!
+            print(imageUrl)
             cell.picView.setImageWith(imageUrl)
         }
         
