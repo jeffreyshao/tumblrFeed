@@ -11,7 +11,7 @@ import AFNetworking
 
 class PhotosViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet weak var tableView: UITableView!    
+    @IBOutlet weak var tableView: UITableView!
     
     var posts: [NSDictionary] = []
 
@@ -73,16 +73,29 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
             // photos is NOT nil, go ahead and access element 0 and run the code in the curly braces
             let imageUrlString = photos[0].value(forKeyPath: "original_size.url") as? String
-            let imageUrl = URL(string: imageUrlString!)!
-            print(imageUrl)
-            cell.picView.setImageWith(imageUrl)
+            if let imageUrl = URL(string: imageUrlString!) {
+                cell.picView.setImageWith(imageUrl)
+            }
         }
-        
-        self.tableView.reloadData()
         
         // Configure YourCustomCell using the outlets that you've defined.
         
         return cell
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let vc = segue.destination as! PhotoDetailsViewController
+        var indexPath = tableView.indexPath(for: sender as! UITableViewCell)
+        let post = posts[indexPath!.row]
+        if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
+            // photos is NOT nil, go ahead and access element 0 and run the code in the curly braces
+            let imageUrlString = photos[0].value(forKeyPath: "original_size.url") as? String
+            let imageUrl = URL(string: imageUrlString!)
+            vc.imageView = imageUrl!
+        }
+        
     }
     
 
